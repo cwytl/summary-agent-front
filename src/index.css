@@ -1,0 +1,51 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 自定义滚动条样式 */
+[data-scroll-container]::-webkit-scrollbar {
+  width: 8px;
+}
+
+[data-scroll-container]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-scroll-container]::-webkit-scrollbar-thumb {
+  background: #909091;
+  border-radius: 20px;
+}
+
+[data-scroll-container]::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5b;
+}
+
+[data-scroll-container] {
+  scroll-padding-bottom: 150px;
+}
+
+/* 会话列表滚动条样式 */
+.sidebar-session-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-session-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-session-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.sidebar-session-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
