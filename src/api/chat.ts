@@ -1,16 +1,17 @@
 // 聊天相关 API
 
 import type { ChatRequest, ChatStreamCallbacks, HistoryResponse, Message, ProgressDataForMessage } from '../types/chat';
-import type { ProgressData, ProgressNode, ProgressStep } from '../components/ProgressPanel';
+import type { ProgressData } from '../components/ProgressPanel';
 
 const BASE_URL = 'http://127.0.0.1:9000';
+const API_BASE_URL = `${BASE_URL}/api/v1`;
 
 export async function sendChatStream(
   request: ChatRequest,
   callbacks: ChatStreamCallbacks
 ): Promise<void> {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/chat`, {
+    const response = await fetch(`${API_BASE_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
@@ -141,7 +142,7 @@ export async function sendChatStream(
 
 // 获取历史对话记录
 export async function getHistory(threadId: string): Promise<{ messages: Message[]; progressData: ProgressData }> {
-  const response = await fetch(`${BASE_URL}/api/v1/history/${threadId}`, {
+  const response = await fetch(`${API_BASE_URL}/history/${threadId}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
@@ -204,9 +205,9 @@ export async function getHistory(threadId: string): Promise<{ messages: Message[
           const message = match[2];
 
           if (nodeName === 'intent') {
-            currentProgress.intent = { name: nodeName, status: 'running', message };
+            currentProgress.intent = { name: nodeName, status: 'running', message, steps: [] };
           } else if (nodeName === 'planner') {
-            currentProgress.planner = { name: nodeName, status: 'running', message };
+            currentProgress.planner = { name: nodeName, status: 'running', message, steps: [] };
           } else {
             currentProgress.worker.push({ name: nodeName, status: 'running', message, steps: [] });
             workerStepsMap.set(nodeName, []);
@@ -333,7 +334,7 @@ export async function getHistory(threadId: string): Promise<{ messages: Message[
 
 // 停止/中断对话
 export async function stopChat(threadId: string): Promise<{ status: string; thread_id: string }> {
-  const response = await fetch(`${BASE_URL}/api/v1/stop/${threadId}`, {
+  const response = await fetch(`${API_BASE_URL}/stop/${threadId}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
   });
@@ -347,7 +348,7 @@ export async function stopChat(threadId: string): Promise<{ status: string; thre
 
 // 知乎登录确认
 export async function confirmZhihuLogin(): Promise<{ status: string }> {
-  const response = await fetch(`${BASE_URL}/api/v1/zhihu/confirm`, {
+  const response = await fetch(`${API_BASE_URL}/zhihu/confirm`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
   });

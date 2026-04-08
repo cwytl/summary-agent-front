@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { Session } from '../types/chat';
+import type { Conversation } from '../types/conversation';
+import { getConversations } from '../api/conversation';
 
 const STORAGE_KEY_SESSIONS = 'bili_agent_sessions';
 const STORAGE_KEY_CURRENT = 'bili_agent_current_session_id';  // 使用 sessionStorage
@@ -48,6 +50,22 @@ export function useSessions() {
     }
   }, [currentSessionId]);
 
+  // 从服务端加载会话列表
+  const loadSessionsFromServer = useCallback(async (userId: string) => {
+    try {
+      const result = await getConversations({ userId });
+      const serverSessions: Session[] = result.conversations.map((conv: Conversation) => ({
+        id: conv.id,
+        title: conv.title,
+        createdAt: new Date(conv.createdAt).getTime(),
+        lastMessageAt: new Date(conv.updatedAt).getTime(),
+      }));
+      setSessions(serverSessions);
+    } catch (error) {
+      console.error('加载会话列表失败:', error);
+    }
+  }, []);
+
   // 添加新会话
   const addSession = useCallback((id: string, title: string) => {
     const now = Date.now();
@@ -78,6 +96,15 @@ export function useSessions() {
     );
   }, []);
 
+  // 更新会话标题
+  const updateSessionTitle = useCallback((id: string, title: string) => {
+    setSessions(prev =>
+      prev.map(s =>
+        s.id === id ? { ...s, title: title.slice(0, 20) + (title.length > 20 ? '...' : '') } : s
+      )
+    );
+  }, []);
+
   // 删除会话
   const deleteSession = useCallback((id: string) => {
     setSessions(prev => prev.filter(s => s.id !== id));
@@ -104,7 +131,9 @@ export function useSessions() {
     setCurrentSessionId,
     addSession,
     updateSessionLastMessage,
+    updateSessionTitle,
     deleteSession,
     switchSession,
+    loadSessionsFromServer,
   };
 }

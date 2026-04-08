@@ -1,6 +1,6 @@
 // 思考中动画组件 - 三个跳动的点
 
-import React from 'react';
+
 
 export function TypingIndicator() {
   return (

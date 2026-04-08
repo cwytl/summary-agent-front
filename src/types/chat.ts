@@ -11,18 +11,28 @@ export interface Message {
 export interface ProgressDataForMessage {
   intent?: {
     name: string;
-    status: 'running' | 'completed';
+    status: 'pending' | 'running' | 'completed';
     message: string;
+    steps: {
+      index: number;
+      status: 'running' | 'completed' | 'error';
+      message: string;
+    }[];
   } | null;
   planner?: {
     name: string;
-    status: 'running' | 'completed';
+    status: 'pending' | 'running' | 'completed';
     message: string;
+    steps: {
+      index: number;
+      status: 'running' | 'completed' | 'error';
+      message: string;
+    }[];
   } | null;
   plan: string[];
   worker: {
     name: string;
-    status: 'running' | 'completed';
+    status: 'pending' | 'running' | 'completed';
     message: string;
     steps: {
       index: number;

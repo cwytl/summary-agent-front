@@ -1,6 +1,6 @@
 // 执行进度组件 - 分阶段展示：intent → plan → worker
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export interface ProgressStep {
   index: number;
